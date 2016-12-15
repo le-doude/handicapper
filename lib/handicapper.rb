@@ -1,4 +1,4 @@
-require "handicapper/version"
+require 'handicapper/version'
 
 module Handicapper
 

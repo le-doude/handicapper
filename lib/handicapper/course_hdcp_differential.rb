@@ -9,7 +9,7 @@ module Handicapper
     STANDARD_DIFFICULTY_STANDARD = 113
 
     def handicap_differential(total_score)
-      (total_score / course_rating) * (STANDARD_DIFFICULTY_STANDARD / slope_rating).round(half: :up)
+      (total_score / course_rating) * (STANDARD_DIFFICULTY_STANDARD / slope_rating).round(1)
     end
   end
 end
