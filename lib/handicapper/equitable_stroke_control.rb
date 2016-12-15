@@ -1,10 +1,9 @@
 module Handicapper
-  class EquitableStrokeControl
-      # @param [Array] par_scores is an array of ints representing pars for the current course played/scored
-      def new(par_scores)
-        fail ArgumentError, 'Need to set par scores for course to use ESC' unless par_scores.present?
-        fail ArgumentError, 'Need a number representing a valid par score for each hole, in order of holes played' unless par_scores.all? { |p| p.is_a?(Fixnum) && (1..10).include?(p) }
-        @par_scores = par_scores
+  module EquitableStrokeControlCalculation
+      def self.included(klass)
+        klass.class_eval do
+          attr :par_scores
+        end
       end
 
       # @param [Fixnum] handicap
