@@ -15,8 +15,8 @@ module Faking
       )
     end
 
-    def differentials(min = -5.0, max= 45.0, n = 1)
-      n.times.map { (min.to_f..max.to_f).step(0.1).to_a.sample }
+    def differentials(n = 1)
+      n.times.map { (-5.0..45.0).step(0.1).to_a.sample.round(5) }
     end
 
   end

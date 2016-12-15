@@ -3,13 +3,15 @@ require 'handicapper/handicap_calculator'
 
 describe Handicapper::HandicapCalculator do
 
+  let(:fresh) { Handicapper::HandicapCalculator.new }
+
   it 'has an attribute differentials' do
-    expect(Handicapper::HandicapCalculator.new).to respond_to(:differentials)
+    expect(fresh).to respond_to(:differentials)
   end
 
   describe :initialize do
     it 'returns an instance without differentials if no params given' do
-      expect(Handicapper::HandicapCalculator.new.differentials).to be_empty
+      expect(fresh.differentials).to be_empty
     end
 
     it 'returns an instance with differentials if provided' do
@@ -21,27 +23,36 @@ describe Handicapper::HandicapCalculator do
   end
 
   describe :calculate do
-    it 'does not return an handicap until it has 5 scores' do
-      instance = Handicapper::HandicapCalculator.new
-      # 1
-      expect(instance.calculate(Faking.round_settings, Faking.scores)).to be_nil
-      # 2
-      expect(instance.calculate(Faking.round_settings, Faking.scores)).to be_nil
-      # 3
-      expect(instance.calculate(Faking.round_settings, Faking.scores)).to be_nil
-      # 4
-      expect(instance.calculate(Faking.round_settings, Faking.scores)).to be_nil
-      # 5
-      expect(instance.calculate(Faking.round_settings, Faking.scores)).to be_a(Float)
+    it 'loads a new differential for every score loaded' do
+      expect { fresh.calculate(Faking.round_settings, Faking.scores) }.to change { fresh.differentials.size }.by(1)
+    end
+
+    it 'returns nil unless 5 scores are loaded' do
+      4.times do
+        expect(fresh.calculate(Faking.round_settings, Faking.scores)).to be_nil
+      end
+      expect(fresh.calculate(Faking.round_settings, Faking.scores)).to be_a(Float)
     end
     it 'will start giving handicaps using initialization differentials' do
-      instance = Handicapper::HandicapCalculator.new
       7.times do
-        instance.calculate(Faking.round_settings, Faking.scores)
+        fresh.calculate(Faking.round_settings, Faking.scores)
       end
-      d = instance.differentials
+      d = fresh.differentials
       new_instance = Handicapper::HandicapCalculator.new(d)
       expect(new_instance.calculate(Faking.round_settings, Faking.scores)).to be_a(Float)
     end
   end
+
+  describe :current_handicap do
+    let(:foury) { Handicapper::HandicapCalculator.new(Faking.differentials(n=4)) }
+    it 'returns nil unless 5 scores are loaded' do
+      expect(fresh.current_handicap).to be_nil
+      expect(foury.current_handicap).to be_nil
+    end
+    let(:fivy) { Handicapper::HandicapCalculator.new(Faking.differentials(n=5)) }
+    it 'returns handicap if there is more than 5 scores loaded' do
+      expect(fivy.current_handicap).to be_a(Float)
+    end
+  end
+
 end
