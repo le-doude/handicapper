@@ -7,11 +7,20 @@ describe Handicapper::CourseHdcpDifferential do
 
       def initialize
         @course_rating= (100.0..155.0).step(0.1).to_a.sample
-        @slope_rating= 72.0 + (-5.0..5.0).step(0.1).to_a.sample
+        @slope_rating = 72.0 + (-5.0..5.0).step(0.1).to_a.sample
       end
     end.new
   end
   let(:score) { (54..130).to_a.sample }
+
+
+  it 'has a course_rating attribute' do
+    expect(instance).to respond_to(:course_rating)
+  end
+
+  it 'has a slope_rating attribute' do
+    expect(instance).to respond_to(:slope_rating)
+  end
 
   describe :handicap_differential do
     it 'returns a float' do
