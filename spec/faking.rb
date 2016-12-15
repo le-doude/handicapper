@@ -1,0 +1,23 @@
+require 'handicapper/round_settings'
+
+module Faking
+  class << self
+
+    def scores(holes = 18, min =1, max=20)
+      holes.times.map { (min..max).to_a.sample }
+    end
+
+    def round_settings(holes = 18)
+      Handicapper::RoundSettings.new(
+        (100.0..155.0).step(0.1).to_a.sample,
+        (60.0..85.0).step(0.1).to_a.sample,
+        holes.times.map { [3, 4, 5].sample }
+      )
+    end
+
+    def differentials(min = -5.0, max= 45.0, n = 1)
+      n.times.map { (min.to_f..max.to_f).step(0.1).to_a.sample }
+    end
+
+  end
+end

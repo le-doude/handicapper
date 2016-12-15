@@ -1,5 +1,11 @@
+require 'float_refinements'
+
 module Handicapper
   class HandicapCalculator
+    using FloatRefinements
+
+    attr_reader :differentials
+
     USGA_OFFICIAL_HDCP_ADJUSTER = 0.96
 
     # @param [Array] differentials array of float representing the previously calculater hdcp differentials for this player
@@ -16,22 +22,22 @@ module Handicapper
                       setting.adjust_gross_scores(scores)
                     elsif scores.is_a?(Fixnum)
                       scores
-                    else
-                      return
                     end
-      @differentials << settings.handicap_differential(total_score)
+      return unless total_score
+      @differentials << setting.handicap_differential(total_score)
       current_handicap
     end
 
     def current_handicap
-      d_count = differencials_to_consider
+      d_count = number_to_consider
       return unless d_count > 0
-      ((@differentials.min(d_count).inject(&:+) / d_count.to_f) * USGA_OFFICIAL_HDCP_ADJUSTER).round(1)
+      result = (@differentials.min(d_count).inject(&:+) / d_count.to_f) * USGA_OFFICIAL_HDCP_ADJUSTER
+      result.chop
     end
 
     private
 
-    def differencials_to_consider
+    def number_to_consider
       size = @differentials.size
       case size
         when 5..16
