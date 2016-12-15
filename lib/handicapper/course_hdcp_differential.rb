@@ -1,5 +1,5 @@
 module Handicapper
-  module CourseHdcpDifferentialCalculation
+  module CourseHdcpDifferential
     def self.included(klass)
       klass.class_eval do
         attr :course_rating, :slope_rating

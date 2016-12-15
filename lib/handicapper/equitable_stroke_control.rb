@@ -1,5 +1,5 @@
 module Handicapper
-  module EquitableStrokeControlCalculation
+  module EquitableStrokeControl
       def self.included(klass)
         klass.class_eval do
           attr :par_scores
