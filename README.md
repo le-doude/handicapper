@@ -3,6 +3,10 @@
 This gem provides a quick API to calculate handicaps according to the USGA official algorithm
 http://golfsoftware.com/hsd/golf-handicap-formula.html
 
+## Status
+
+[![Build Status](https://travis-ci.org/le-doude/handicapper.svg?branch=master)](https://travis-ci.org/le-doude/handicapper)
+
 ## Installation
 
 Add this line to your application's Gemfile:
