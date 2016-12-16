@@ -19,7 +19,7 @@ module Handicapper
     # @return [Float] the handicap after accounting for this new round
     def calculate(setting, scores)
       total_score = if scores.is_a?(Enumerable)
-                      setting.adjust_gross_scores(scores)
+                      setting.adjust_gross_scores(current_handicap, scores)
                     elsif scores.is_a?(Fixnum)
                       scores
                     end
