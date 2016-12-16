@@ -12,7 +12,7 @@ http://golfsoftware.com/hsd/golf-handicap-formula.html
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'handicapper'
+gem 'handicapper', github: 'le-doude/handicapper'
 ```
 
 And then execute:
