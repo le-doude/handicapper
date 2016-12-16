@@ -25,7 +25,36 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+This is meant to be an easy API to help you calculate your handicap.
+It use the most bare data structures to do it.
+
+Classic use:
+
+```ruby
+ previous_rounds = # if you have some previous handicap differentials load them here in an Array
+ calculator = Handicapper.calculator(previous_rounds)
+ 
+ # This is the settings for Ko'olau golf course from the gold/tournament tees.
+ round_settings = Handicapper.round_settings(
+  153, # course rating
+  78.2, # slope rating
+  [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4] # par for each holes in order of play
+ )
+ # Your round has to be in the same order as the par scores above
+ my_round = [9, 6, 7, 4, 4, 3, 8, 7, 7, 6, 6, 4, 3, 4, 5, 8, 4, 7] # I wish
+ 
+ # calculate returns the updated handicap after considering the submitted round
+ handicap = calculator.calculate(round_settings, my_round)
+ # if you do not have the hole by hole score you can use the total. The result might not be the same as with the official USGA calculations though
+ handicap = calculator.calculate(round_settings, 132)
+ # you can use current handicap if you have no new round but want it calculated
+ handicap = calculator.current_handicap
+```
+
+If you want to trace a good evolution of your handicap you need to enter your rounds in order of play.
+If you are only interested in the final handicap then any order is fine.
+
+Any suggestion about the API of this gem is welcome.
 
 ## Development
 
