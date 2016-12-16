@@ -51,8 +51,8 @@ Classic use:
  handicap = calculator.current_handicap
 ```
 
-If you want to trace a good evolution of your handicap you need to enter your rounds in order of play.
-If you are only interested in the final handicap then any order is fine.
+If you want a handicap in line with your official USGA/R&A handicap you will need to enter all your rounds hole by hole and in chronological order of play. 
+This is due to the ESC system that use your previous handicap to adjust your gross score to eliminate "anomaly" holes. 
 
 Any suggestion about the API of this gem is welcome.
 
