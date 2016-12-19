@@ -13,7 +13,6 @@ describe Handicapper::HandicapCalculator do
     it 'returns an instance without differentials if no params given' do
       expect(fresh.differentials).to be_empty
     end
-
     it 'returns an instance with differentials if provided' do
       status = Faking.differentials(n=10)
       instance = Handicapper::HandicapCalculator.new(status)
@@ -26,7 +25,6 @@ describe Handicapper::HandicapCalculator do
     it 'loads a new differential for every score loaded' do
       expect { fresh.calculate(Faking.round_settings, Faking.scores) }.to change { fresh.differentials.size }.by(1)
     end
-
     it 'returns nil unless 5 scores are loaded' do
       4.times do
         expect(fresh.calculate(Faking.round_settings, Faking.scores)).to be_nil
@@ -41,6 +39,15 @@ describe Handicapper::HandicapCalculator do
       new_instance = Handicapper::HandicapCalculator.new(d)
       expect(new_instance.calculate(Faking.round_settings, Faking.scores)).to be_a(Float)
     end
+    it 'accepts total scores' do
+      expect { fresh.calculate(Faking.round_settings, Faking.scores.inject(:+)) }.not_to raise_exception
+    end
+    it 'accepts hole by hole scores' do
+      expect { fresh.calculate(Faking.round_settings, Faking.scores) }.not_to raise_exception
+    end
+    it 'fails if scores number do not match holes number' do
+      expect { fresh.calculate(Faking.round_settings(holes=18), Faking.scores(holes=15)) }.to raise_exception(ArgumentError)
+    end
   end
 
   describe :current_handicap do
@@ -54,5 +61,4 @@ describe Handicapper::HandicapCalculator do
       expect(fivy.current_handicap).to be_a(Float)
     end
   end
-
 end
