@@ -7,6 +7,10 @@ module Faking
       holes.times.map { (min..max).to_a.sample }
     end
 
+    def total_score(holes = 18)
+      scores(holes= holes).inject(:+)
+    end
+
     def round_settings(holes = 18)
       Handicapper::RoundSettings.new(
         (100.0..155.0).step(0.1).to_a.sample,

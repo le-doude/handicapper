@@ -22,6 +22,15 @@ describe Handicapper::HandicapCalculator do
   end
 
   describe :calculate do
+    it 'accepts total scores' do
+      expect { fresh.calculate(Faking.round_settings, 105) }.not_to raise_exception
+    end
+    it 'accepts hole by hole scores' do
+      expect { fresh.calculate(Faking.round_settings, Faking.scores) }.not_to raise_exception
+    end
+    it 'fails if scores number do not match holes number' do
+      expect { fresh.calculate(Faking.round_settings(holes=18), Faking.scores(holes=15)) }.to raise_exception(ArgumentError)
+    end
     it 'loads a new differential for every score loaded' do
       expect { fresh.calculate(Faking.round_settings, Faking.scores) }.to change { fresh.differentials.size }.by(1)
     end
@@ -39,14 +48,21 @@ describe Handicapper::HandicapCalculator do
       new_instance = Handicapper::HandicapCalculator.new(d)
       expect(new_instance.calculate(Faking.round_settings, Faking.scores)).to be_a(Float)
     end
-    it 'accepts total scores' do
-      expect { fresh.calculate(Faking.round_settings, Faking.scores.inject(:+)) }.not_to raise_exception
+    it 'gives handicaps with total scores too' do
+      4.times do
+        expect(fresh.calculate(Faking.round_settings, Faking.total_score)).to be_nil
+      end
+      5.times do
+        expect(fresh.calculate(Faking.round_settings, Faking.total_score)).to be_a(Float)
+      end
     end
-    it 'accepts hole by hole scores' do
-      expect { fresh.calculate(Faking.round_settings, Faking.scores) }.not_to raise_exception
-    end
-    it 'fails if scores number do not match holes number' do
-      expect { fresh.calculate(Faking.round_settings(holes=18), Faking.scores(holes=15)) }.to raise_exception(ArgumentError)
+    it 'gives handicaps with total scores and hole by hole mixed too' do
+      4.times do |i|
+        expect(fresh.calculate(Faking.round_settings, i.even? ? Faking.total_score : Faking.scores)).to be_nil
+      end
+      5.times do |i|
+        expect(fresh.calculate(Faking.round_settings, i.even? ? Faking.total_score : Faking.scores)).to be_a(Float)
+      end
     end
   end
 
