@@ -40,17 +40,22 @@ Classic use:
  
  # This is the settings for Ko'olau golf course from the gold/tournament tees.
  round_settings = Handicapper.round_settings(
-  153, # course rating
-  78.2, # slope rating
+  78.2, # course rating
+  153, # slope rating
   [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4] # par for each holes in order of play
  )
  # Your round has to be in the same order as the par scores above
  my_round = [9, 6, 7, 4, 4, 3, 8, 7, 7, 6, 6, 4, 3, 4, 5, 8, 4, 7] # I wish
  
  # calculate returns the updated handicap after considering the submitted round
- handicap = calculator.calculate(round_settings, my_round)
+ handicap = calculator.add_round(round_settings: round_settings, scores: my_round)
+ # or you can use
+ handicap = calculator.add_round(course_rating: 78.2, slope: 153, pars: [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4], scores: my_round) 
+
  # if you do not have the hole by hole score you can use the total. The result might not be the same as with the official USGA calculations though
- handicap = calculator.calculate(round_settings, 132)
+ handicap = calculator.add_round(round_settings: round_settings, adjusted_score: 132)
+ # which is equivalent to
+ handicap = calculator.add_round(course_rating: 78.2, slope: 153, adjusted_score: 132) 
  # you can use current handicap if you have no new round but want it calculated
  handicap = calculator.current_handicap
 ```
