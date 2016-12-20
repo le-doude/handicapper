@@ -8,6 +8,7 @@ http://golfsoftware.com/hsd/golf-handicap-formula.html
 [![Build Status](https://travis-ci.org/le-doude/handicapper.svg?branch=master)](https://travis-ci.org/le-doude/handicapper)
 [![Code Climate](https://codeclimate.com/github/le-doude/handicapper/badges/gpa.svg)](https://codeclimate.com/github/le-doude/handicapper)
 [![Issue Count](https://codeclimate.com/github/le-doude/handicapper/badges/issue_count.svg)](https://codeclimate.com/github/le-doude/handicapper)
+[![Test Coverage](https://codeclimate.com/github/le-doude/handicapper/badges/coverage.svg)](https://codeclimate.com/github/le-doude/handicapper/coverage)
 
 
 ## Installation

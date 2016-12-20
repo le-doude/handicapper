@@ -52,7 +52,7 @@ describe Handicapper::HandicapCalculator do
       4.times do
         expect(fresh.calculate(Faking.round_settings, Faking.total_score)).to be_nil
       end
-      5.times do
+      50.times do
         expect(fresh.calculate(Faking.round_settings, Faking.total_score)).to be_a(Float)
       end
     end
@@ -60,7 +60,7 @@ describe Handicapper::HandicapCalculator do
       4.times do |i|
         expect(fresh.calculate(Faking.round_settings, i.even? ? Faking.total_score : Faking.scores)).to be_nil
       end
-      5.times do |i|
+      50.times do |i|
         expect(fresh.calculate(Faking.round_settings, i.even? ? Faking.total_score : Faking.scores)).to be_a(Float)
       end
     end
