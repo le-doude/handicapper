@@ -3,7 +3,7 @@ require 'basic_object_refinements'
 require 'handicapper/round_settings'
 
 module Handicapper
-  class HandicapCalculator
+  class Calculator
     using FloatRefinements
     using BasicObjectRefinements
 
@@ -11,10 +11,10 @@ module Handicapper
     WOMEN_MAX_HANDICAP = 40.4
     USGA_OFFICIAL_HDCP_ADJUSTER = 0.96
 
-    attr_reader :differentials
+    attr_accessor :differentials
 
     # @param [Array] differentials array of float representing the previously calculater hdcp differentials for this player
-    def initialize(differentials = [], gender = :male)
+    def initialize(differentials: [], gender: :male)
       @differentials = differentials
       @gender = gender.downcase.to_sym
       @last_handicap_calculated = ([:m, :male, :man, :men].include?(@gender) ? MEN_MAX_HANDICAP : WOMEN_MAX_HANDICAP)
@@ -26,8 +26,8 @@ module Handicapper
       fail ArgumentError, 'round settings, or course rating and slope is required to add round' unless round_settings
       adjusted_score ||= adjust_score(round_settings, scores) if scores.present?
       fail ArgumentError, 'scores collection or adjusted score is required to validate round' unless adjusted_score
-      @differentials << round_settings.handicap_differential(adjusted_score)
-      current_handicap
+      @differentials << (last_differential = round_settings.handicap_differential(adjusted_score))
+      last_differential
     end
 
     def current_handicap
@@ -51,7 +51,7 @@ module Handicapper
     def calculate_from_differentials
       d_count = number_to_consider
       return unless d_count > 0
-      differentials_selected = @differentials.min(d_count)
+      differentials_selected = @differentials.last(20).min(d_count)
       result = (differentials_selected.inject(&:+) / differentials_selected.size) * USGA_OFFICIAL_HDCP_ADJUSTER
       result.chop
     end

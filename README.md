@@ -1,7 +1,7 @@
 # Handicapper
 
-This gem provides a quick API to calculate handicaps according to the USGA official algorithm
-http://golfsoftware.com/hsd/golf-handicap-formula.html
+This gem provides a quick API to calculate handicaps according to the USGA official rules
+https://www.usga.org/Handicapping/handicap-manual.html
 
 ## Status
 
@@ -36,10 +36,10 @@ Classic use:
 
 ```ruby
  previous_rounds = # if you have some previous handicap differentials load them here in an Array
- calculator = Handicapper.calculator(previous_rounds)
+ calculator = Handicapper::Calculator(differentials: previous_rounds, gender: :male)
  
  # This is the settings for Ko'olau golf course from the gold/tournament tees.
- round_settings = Handicapper.round_settings(
+ round_settings = Handicapper::RoundSettings.new(
   78.2, # course rating
   153, # slope rating
   [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4] # par for each holes in order of play
@@ -47,21 +47,21 @@ Classic use:
  # Your round has to be in the same order as the par scores above
  my_round = [9, 6, 7, 4, 4, 3, 8, 7, 7, 6, 6, 4, 3, 4, 5, 8, 4, 7] # I wish
  
- # calculate returns the updated handicap after considering the submitted round
- handicap = calculator.add_round(round_settings: round_settings, scores: my_round)
+ # calculate returns the updated handicap differential after considering the submitted round
+ handicap_differential1 = calculator.add_round(round_settings: round_settings, scores: my_round)
  # or you can use
- handicap = calculator.add_round(course_rating: 78.2, slope: 153, pars: [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4], scores: my_round) 
+ handicap_differential2 = calculator.add_round(course_rating: 78.2, slope: 153, pars: [5,4,4,3,4,4,5,3,4,4,5,4,3,4,4,5,3,4], scores: my_round) 
 
- # if you do not have the hole by hole score you can use the total. The result might not be the same as with the official USGA calculations though
- handicap = calculator.add_round(round_settings: round_settings, adjusted_score: 132)
+ # if you do not have the hole by hole score you can use the total. The result might not be the same as with the official USGA calculations though if you did not adjust your total
+ handicap_differential3 = calculator.add_round(round_settings: round_settings, adjusted_score: 132)
  # which is equivalent to
- handicap = calculator.add_round(course_rating: 78.2, slope: 153, adjusted_score: 132) 
+ handicap_differential4 = calculator.add_round(course_rating: 78.2, slope: 153, adjusted_score: 132) 
  # you can use current handicap if you have no new round but want it calculated
- handicap = calculator.current_handicap
+ handicap_index = calculator.current_handicap
 ```
 
 If you want a handicap in line with your official USGA/R&A handicap you will need to enter all your rounds hole by hole and in chronological order of play. 
-This is due to the ESC system that use your previous handicap to adjust your gross score to eliminate "anomaly" holes. 
+This is due to the ESC system that use your previous handicap to adjust your gross score to eliminate "anomaly" holes AND the USGA rules only taking into account your last 20 rounds.
 
 Any suggestion about the API of this gem is welcome.
 
