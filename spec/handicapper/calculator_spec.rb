@@ -2,9 +2,8 @@ require 'spec_helper'
 require 'handicapper/calculator'
 
 describe Handicapper::Calculator do
-
   let(:calculator) { Handicapper::Calculator.new }
-  let(:round_settings) { Handicapper.round_settings(72.0, 113, [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]) }
+  let(:round_settings) { Handicapper::RoundSettings.new(72.0, 113, [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]) }
   let(:scores) { [4, 2, 3, 4, 5, 6, 7, 8, 9, 5, 6, 3, 3, 4, 5, 6, 7, 8] }
   let(:insufficient_scores) { [4, 2, 3, 4, 5, 3, 3, 4, 5, 6, 7, 8] }
 
@@ -63,43 +62,29 @@ describe Handicapper::Calculator do
     end
   end
 
+  shared_examples 'current handicap' do |max_handicap|
+    it 'returns Max handicap when less than 5 rounds are submitted' do
+      subject.differentials = [4.6, 5.6, 3.2, 3.1]
+      expect(subject.current_handicap).to eql(max_handicap)
+    end
+    it 'returns new handicap index when more than 5 rounds are submitted' do
+      subject.differentials = [4.6, 5.6, 3.2, 3.1, 6.5, 1.5, 1.1]
+      expect(subject.current_handicap).not_to eql(max_handicap)
+      expect(subject.current_handicap).to be_a(Float)
+    end
+  end
   describe :current_handicap do
-
+    it 'uses only last 20 differentials' do
+      dz = 50.times.map { (-5.5..15.5).step(0.1).to_a.sample }
+      expect(Handicapper::Calculator.new(differentials: dz).current_handicap).to eql(Handicapper::Calculator.new(differentials: dz.last(20)).current_handicap)
+    end
     context 'player gender set to male' do
-      let(:calculator) { Handicapper::Calculator.new(gender: :male) }
-      let(:max_hdcp_index) { Handicapper::Calculator::MEN_MAX_HANDICAP }
-      it 'returns Max handicap when less than 5 rounds are submitted' do
-        calculator.differentials = [4.6, 5.6, 3.2, 3.1]
-        expect(calculator.current_handicap).to eql(max_hdcp_index)
-      end
-      it 'returns new handicap index when more than 5 rounds are submitted' do
-        calculator.differentials = [4.6, 5.6, 3.2, 3.1, 6.5, 1.5, 1.1]
-        expect(calculator.current_handicap).not_to eql(max_hdcp_index)
-        expect(calculator.current_handicap).to be_a(Float)
-      end
-      it 'uses only last 20 differentials' do
-        dz = 50.times.map { (-5.5..15.5).step(0.1).to_a.sample }
-        expect(Handicapper::Calculator.new(differentials: dz, gender: :male).current_handicap).to eql(Handicapper::Calculator.new(differentials: dz.last(20), gender: :male).current_handicap)
-      end
+      subject {Handicapper::Calculator.new(gender: :male)}
+      it_behaves_like 'current handicap', Handicapper::Calculator::MEN_MAX_HANDICAP
     end
-
     context 'player gender set to female' do
-      let(:calculator) { Handicapper::Calculator.new(gender: :female) }
-      let(:max_hdcp_index) { Handicapper::Calculator::WOMEN_MAX_HANDICAP }
-      it 'returns Max handicap when less than 5 rounds are submitted' do
-        calculator.differentials = [4.6, 5.6, 3.2, 3.1]
-        expect(calculator.current_handicap).to eql(max_hdcp_index)
-      end
-      it 'returns new handicap index when more than 5 rounds are submitted' do
-        calculator.differentials = [4.6, 5.6, 3.2, 3.1, 6.5, 1.5, 1.1]
-        expect(calculator.current_handicap).not_to eql(max_hdcp_index)
-        expect(calculator.current_handicap).to be_a(Float)
-      end
-      it 'uses only last 20 differentials' do
-        dz = 50.times.map { (-5.5..15.5).step(0.1).to_a.sample }
-        expect(Handicapper::Calculator.new(differentials: dz, gender: :female).current_handicap).to eql(Handicapper::Calculator.new(differentials: dz.last(20), gender: :female).current_handicap)
-      end
+      subject {Handicapper::Calculator.new(gender: :female)}
+      it_behaves_like 'current handicap', Handicapper::Calculator::WOMEN_MAX_HANDICAP
     end
-
   end
 end
