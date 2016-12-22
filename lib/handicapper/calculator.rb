@@ -40,12 +40,8 @@ module Handicapper
     private
 
     def adjust_score(setting, scores)
-      if scores.is_a?(Enumerable)
-        course_hdcp = setting.course_handicap(current_handicap)
-        setting.adjust_gross_scores(course_hdcp, scores)
-      elsif scores.is_a?(Numeric)
-        scores
-      end
+      course_hdcp = setting.course_handicap(current_handicap)
+      setting.adjust_gross_scores(course_hdcp, scores)
     end
 
     def calculate_from_differentials
