@@ -1,16 +1,16 @@
 require 'spec_helper'
 require 'handicapper/calculator'
 
-describe Handicapper::Calculator do
-  shared_examples :calculation do |differentials, gender, rounds, final_handicap|
+describe 'USGA rule compliance' do
+  shared_examples 'valid handicap index example' do |differentials, gender, rounds, final_handicap|
     let(:calculator) { Handicapper::Calculator.new(differentials: differentials, gender: gender) }
-    it 'should be correct' do
+    it "should output handicap index = #{final_handicap}" do
       rounds.each do |round|
-        if (expected = round[:expected_differential])
-          round.delete(:expected_differential)
+        expected = round[:expected_differential]
+        round.delete(:expected_differential)
+        if expected
           expect(calculator.add_round(**round)).to eql(expected)
         else
-          round.delete(:expected_differential)
           expect(calculator.add_round(**round)).to be_a(Float)
         end
       end
@@ -18,6 +18,7 @@ describe Handicapper::Calculator do
     end
   end
 
+  # https://www.usga.org/Handicapping/handicap-manual.html#!rule-14389
   context 'USGA official example' do
     rounds = [
       {adjusted_score: 88, course_rating: 70.1, slope: 116, expected_differential: 17.4},
@@ -41,7 +42,7 @@ describe Handicapper::Calculator do
       {adjusted_score: 91, course_rating: 70.1, slope: 116, expected_differential: 20.4},
       {adjusted_score: 90, course_rating: 70.1, slope: 116, expected_differential: 19.4}
     ]
-    it_behaves_like :calculation, [], :male, rounds, 14.8
+    it_behaves_like 'valid handicap index example', [], :male, rounds, 14.8
   end
 
 end
