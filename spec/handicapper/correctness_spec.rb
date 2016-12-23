@@ -51,9 +51,9 @@ describe 'USGA rule compliance' do
       [74.0, 130, 99, 21.7],
       [69.8, 122, 107, 34.5],
       [69.2, 117, 109, 38.4],
-      [74.0, 130, 115, 31.3],
+      [74.0, 130, 110, 31.3],
       [74.0, 130, 99, 21.7],
-      [67.4, 113, 107, 36.6],
+      [67.4, 113, 104, 36.6],
       [69.2, 117, 98, 27.8],
       [67.4, 113, 98, 30.6],
       [74.0, 130, 106, 27.8],
@@ -61,12 +61,12 @@ describe 'USGA rule compliance' do
       [67.5, 112, 96, 28.8],
       [66.0, 109, 92, 27.0],
       [69.7, 99, 80, 11.8],
-      [69.1, 116, 95, 24.3],
+      [69.1, 116, 94, 24.3],
       [69.7, 99, 93, 26.6],
       [68.6, 120, 90, 20.2],
       [67.5, 112, 90, 22.7],
-    ].map { |cr, s, score, _| {course_rating: cr, slope: s, adjusted_score: score} }
-    it_behaves_like 'valid handicap index example', [], :male, rounds, 20.5
+    ].map { |cr, s, score, ed| {course_rating: cr, slope: s, adjusted_score: score, expected_differential: ed} }
+    it_behaves_like 'valid handicap index example', [], :male, rounds, 20.4
   end
 
   context 'People on the golf association of Michigan' do
