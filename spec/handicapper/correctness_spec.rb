@@ -46,6 +46,7 @@ describe 'USGA rule compliance' do
   end
 
   context 'Random reddit nice guy that gave me his scores' do
+    # XXX: something is broken in this example. Under verrification.
     rounds = [
       [74.0, 130, 99, 21.7],
       [69.8, 122, 107, 34.5],
